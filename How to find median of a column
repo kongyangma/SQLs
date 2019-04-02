@@ -1,0 +1,12 @@
+/*This is one way of finding the median of a column*/
+/*Creating new columns, row_number and total_rows*/
+/*Alternative: use window function*/
+SELECT AVG(dd.Salary) as median_val
+FROM (
+SELECT e.Salary, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
+  FROM median_employee e, (SELECT @rownum:=0) r
+  WHERE e.Salary is NOT NULL
+  -- put some where clause here
+  ORDER BY e.Salary
+) as dd
+WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
